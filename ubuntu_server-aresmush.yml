@@ -84,7 +84,5 @@
         group: www-data
         recurse: yes
 
-### TO-DO: On Boot setup
 ### TO-DO: unattended upgrades verifcation
-### TO-DO: Notice to set
 
