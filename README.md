@@ -7,7 +7,8 @@ ansible skills.
 # Installing
 Make sure you have ansible installed in your ubuntu system. 
 Then run the first playbook which will install the base, 
-and also creating the ares user for you. Run at root.
+and also creating the ares user for you. Run at root on the box.
+Playbook uses local connection.
 
 <pre>
 # ansible-playbook ubuntu_server-aresush.yml
