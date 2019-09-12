@@ -11,7 +11,7 @@ also creating the ares user for you. Run at root on the box.
 Playbook uses local connection.
 
 <pre>
-# ansible-playbook ubuntu_server-aresush.yml
+# ansible-playbook ubuntu_server-aresmush.yml
 </pre>
 
 Now run the aresmush ansible installer, as root user.
