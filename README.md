@@ -21,8 +21,8 @@ Now run the aresmush ansible installer, as root user.
 </pre>
 
 # Configure
-Below will configure ares, this usually is done once. All commands
-make sure you use the ares account. 
+Below will configure ares, this usually is done once. Make sure to be the
+'ares' user when running these commands.
 <pre>
 
 ## Become the ares user
@@ -31,13 +31,13 @@ make sure you use the ares account.
 # Change into game directory
 $ cd aresmush
 
-# This will configure site specific things
+# This will configure site specific things (ip, ports, etc)
 $ bundle exec rake configure
 
 # This will wipe the db/init
 $ bundle exec rake init
 
-# Database migrations
+# Database migrations (If any)
 $ bundle exec rake initmigrations
 
 # Webportal config, file is created during site specific configuration
@@ -56,5 +56,5 @@ $ bin/startares
 
 # TODO:
 * Like to dockerize the install of ares at some point.
-* Configure all with ansible, but did not want to mess with the ruby/rake portion
+* Configure all with ansible, but did not want to mess with the ruby/rake things.
 * Add Vagrant file for auto provisioning for ares development/test
