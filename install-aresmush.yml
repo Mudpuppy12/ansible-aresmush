@@ -1,0 +1,117 @@
+---
+- hosts: localhost 
+  connection: local
+  vars:
+    git_repos:
+      - { "aresmush":  "https://github.com/aresmush/aresmush.git" }
+      - { "ares-webportal": "https://github.com/aresmush/ares-webportal.git" }
+
+  roles:
+    - { role: rvm.ruby,
+        tags: ruby,
+        rvm1_rubies: ['ruby-2.6.3'],
+        rvm1_user: 'ares',
+        rvm1_install_flags: '--auto-dotfiles --user-install',
+        rvm1_install_path: '/home/ares/.rvm'
+      }
+    - Oefenweb.yarn
+
+  tasks:
+    - name: Adding ruby version to profile
+      lineinfile:
+        path: /home/ares/.profile
+        state: present
+        line: 'rvm use ruby-2.6.3'
+
+    - name: Installing bundler 2.0.2
+      shell: source /home/ares/.profile && gem install bundler rake
+      become: yes
+      become_user: ares
+      args:
+        executable: /bin/bash
+
+    - name: Fetching aresmush base git repo
+      git: 
+        repo: "{{ item.value }}"
+        dest: "/home/ares/{{ item.key }}"
+      with_dict: "{{ git_repos }}"
+      ignore_errors: true
+      become: yes
+      become_user: ares
+
+    - name: Copy over inital game config 
+      copy:
+        src: /home/ares/aresmush/install/game.distr/
+        dest: /home/ares/aresmush/game/
+        force: no
+        owner: ares
+        group: ares
+
+    - name: Creating log directory
+      file:
+        path: /home/ares/aresmush/game/logs
+        state: directory
+        mode: '0755'
+        owner: ares
+        group: ares
+
+    - name: Installing aresmush bundle gems
+      shell: source /home/ares/.profile && bundle install
+      become: yes
+      become_user: ares
+      args:
+        executable: /bin/bash
+        chdir: /home/ares/aresmush
+
+    - name: Installing symbolic link for web portal
+      file: 
+        src: /home/ares/aresmush/game
+        dest: /var/www/html/game
+        state: link
+
+    ### TODO: Below files doesn't exist until rake configure is run
+    - name: Copying over nginx config
+      copy:
+        src: /home/ares/aresmush/install/nginx.default
+        dest: /etc/nginx/sites-enabled/default
+      ignore_errors: true 
+
+    - name: Restart the nginx
+      service:
+        name: nginx
+        state: restarted  
+
+    - name: Installing nvm
+      shell: >
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+      args:
+        executable: /bin/bash
+        chdir: "/home/ares"
+        creates: "/home/ares/.nvm/nvm.sh"
+      become: yes
+      become_user: ares
+
+    - name: Install node 10.16
+      shell: '. /home/ares/.nvm/nvm.sh && nvm install 10.16'
+      args:
+        creates: "/home/ares/.nvm/versions/node"
+        chdir: "/home/ares"
+        executable: /bin/bash
+      become: yes
+      become_user: ares
+
+    - name: Set default node version 10.16
+      shell: '. /home/ares/.nvm/nvm.sh && nvm alias default 10.16'
+      args:
+        chdir: "/home/ares"
+        executable: /bin/bash
+      become: yes
+      become_user: ares
+
+    - name: Installing Ember CLI
+      shell: '. /home/ares/.nvm/nvm.sh && npm install -g ember-cli'
+      args:
+        chdir: "/home/ares"
+        executable: /bin/bash
+      become: yes
+      become_user: ares

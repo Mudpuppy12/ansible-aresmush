@@ -1,0 +1,90 @@
+## Tested on  Ubuntu 18.04.03 / virtualbox
+
+---
+- hosts: localhost 
+  connection: local
+  become: yes
+  vars:
+    ares_req_packages:
+      - "git"
+      - "binutils"
+      - "apt-transport-https"
+      - "ruby-bundler"
+      - "ruby-dev"
+      - "nginx"
+      - "nodejs"
+      - "npm"
+      - "python"
+      - "redis-server"
+      - "hugepages"
+      - "fail2ban"
+      - "unattended-upgrades"
+
+
+
+  tasks:
+    - name: Update and upgrade apt packages on server
+      apt: 
+        upgrade: dist
+        update_cache: yes
+        cache_valid_time: 86400
+
+    - name: installing ares required server packages
+      apt: 
+        name: "{{ ares_req_packages }}"
+
+
+    - name: Redis needs Transparent Huge Pages kernel feature disabled
+      shell: hugeadm --thp-never
+    
+    ### I don't think this works right - Need to debug/Do we care?
+    ### dpkg-reconfigure -plow unattended-upgrades from install / prompts with a pop-up!?
+    - name: Turn unatteded upgrades on
+      debconf: 
+        name: unattended-upgrades
+        value: 'yes'
+        vtype: boolean
+        question: unattended-upgrades/enable_auto_updates
+
+    - name: Start the redis database server
+      service:
+        name: redis
+        state: started
+        enabled: yes
+  
+    - name: Restart the redis database server to force dumpfile
+      service:
+        name: redis
+        state: restarted
+
+    - name: Add the ares user
+      user:
+        name: ares
+        shell: /bin/bash
+        groups: www-data,sudo,redis
+
+    - name: Give ares user SUDO access
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^%sudo'
+        line: '%sudo  ALL=(ALL:ALL) NOPASSWD: ALL'
+        validate: /usr/sbin/visudo -cf %s
+
+
+    - name: Giving permissions to ares user for redis.conf
+      file:
+        path: /etc/redis/redis.conf
+        mode: '0660'
+    
+    - name: Giving permission to ares for /var/www/html
+      file: 
+        path: /var/www/html
+        owner: ares
+        group: www-data
+        recurse: yes
+
+### TO-DO: On Boot setup
+### TO-DO: unattended upgrades verifcation
+### TO-DO: Notice to set
+
