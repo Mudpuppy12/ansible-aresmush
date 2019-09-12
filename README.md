@@ -21,8 +21,12 @@ Now run the aresmush installer, as root user
 Below will configure ares, this usually is done once
 <pre>
 
+## Become the ares user
 # sudo su - ares
-$ cd cd aresmush
+
+# Change into game directory
+
+$ cd aresmush
 
 # This will configure site specific things
 $ bundle exec rake configure
