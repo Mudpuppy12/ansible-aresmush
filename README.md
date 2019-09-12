@@ -1,6 +1,8 @@
 # ansible-aresmush
-Installs aresmush on an ubuntu-18.04 system using ansible
-scripts.
+Installs aresmush on an ubuntu-18.04 system using ansible playbook. 
+I wanted to install ares on a virtual box, and brush up on some
+ansible skills.
+
 
 # Installing
 Make sure you have ansible installed in your ubuntu system. 
@@ -11,21 +13,21 @@ and also creating the ares user for you. Run at root.
 # ansible-playbook ubuntu_server-aresush.yml
 </pre>
 
-Now run the aresmush installer, as root user
+Now run the aresmush ansible installer, as root user.
 
 <pre>
 # ansible-playbook install-aresmush.yml
 </pre>
 
 # Configure
-Below will configure ares, this usually is done once
+Below will configure ares, this usually is done once. All commands
+make sure you use the ares account. 
 <pre>
 
 ## Become the ares user
 # sudo su - ares
 
 # Change into game directory
-
 $ cd aresmush
 
 # This will configure site specific things
@@ -44,7 +46,14 @@ $ sudo service nginx restart
 </pre>
 
 # Start up the game!
+As the ares user star up the game.
+
 <pre>
 $ cd aresmush
 $ bin/startares
 </pre>
+
+# TODO:
+* Like to dockerize the install of ares at some point.
+* Configure all with ansible, but did not want to mess with the ruby/rake portion
+* Add Vagrant file for auto provisioning for ares development/test
