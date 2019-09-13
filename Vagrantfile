@@ -3,7 +3,7 @@ Vagrant.configure("2") do |config|
     aresmush.vm.box = "ubuntu/bionic64"
     aresmush.vm.hostname = "aresmush.internal.lan"
     aresmush.vm.network :private_network, ip: "192.168.100.199"
-    aresmush.vm.network "forwarded_port", guest:4201, host:4201
+    aresmush.vm.network "forwarded_port", guest:4201, host:4201, guest_ip: "192.168.100.199"
     aresmush.vm.network "forwarded_port", guest:4202, host:4202
     aresmush.vm.network "forwarded_port", guest:4203, host:4203
     aresmush.vm.network "forwarded_port", guest:80, host:8080
@@ -18,9 +18,9 @@ Vagrant.configure("2") do |config|
     aresmush.vm.provision "ansible_local" do |ansible|
        ansible.install_mode = "default"
        ansible.version = "latest"
-       # ansible.become = true
-       # ansible.playbook = "/opt/src/playbook.yml"
-       # ansible.galaxy_role_file = "/opt/src/requirements.yml"
+       ansible.become = true
+       ansible.playbook = "/opt/src/playbook.yml"
+       ansible.galaxy_role_file = "/opt/src/requirements.yml"
        ansible.limit = "all,localhost"
 
        
