@@ -42,7 +42,7 @@ $ bundle exec rake initmigrations
 
 # Webportal config, file is created during site specific configuration
 
-$ sudo cp /home/ares/aresmush/install/nginx.default" /etc/nginx/sites-enabled/default
+$ sudo cp /home/ares/aresmush/install/nginx.default /etc/nginx/sites-enabled/default
 $ sudo service nginx restart
 </pre>
 
