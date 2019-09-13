@@ -69,8 +69,6 @@ Vagrantfile
    - ubuntu_server-aresmush.yml
 </pre>
 
-</pre>
 # TODO:
 * Like to dockerize the install of ares at some point.
 * Configure all with ansible, but did not want to mess with the ruby/rake things.
-* Add Vagrant file for auto provisioning for ares development/test
