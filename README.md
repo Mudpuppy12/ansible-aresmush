@@ -1,5 +1,6 @@
 # ansible-aresmush
-Ansible plays to install aresmush in a Virtual Box and Vagrant.
+Ansible plays to install aresmush in a Virtual Box and Vagrant. If you don't want to use
+vagrant, you can use the playbooks under /src with ansible on the local box.
 
 # Install
 
