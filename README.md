@@ -54,6 +54,22 @@ $ cd aresmush
 $ bin/startares
 </pre>
 
+
+# Vagrant
+When using the Vagrant template to start up a virtual box for testing, put the ansible scripts in a src directory under
+where Vagrant file on your host system. This will map /opt/src
+in the VM to the local files on your host.
+
+<pre>
+Vagrantfile
+\src
+   - anible.cfg
+   - \roles\*
+   - install-aresmush.yml
+   - ubuntu_server-aresmush.yml
+</pre>
+
+</pre>
 # TODO:
 * Like to dockerize the install of ares at some point.
 * Configure all with ansible, but did not want to mess with the ruby/rake things.
