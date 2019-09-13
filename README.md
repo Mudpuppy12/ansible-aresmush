@@ -1,74 +1,49 @@
 # ansible-aresmush
-Installs aresmush on an ubuntu-18.04 system using ansible playbook. 
-I wanted to install ares on a virtual box, and brush up on some
-ansible skills.
+Ansible plays to install aresmush in a Virtual Box and Vagrant.
 
+# Install
 
-# Installing
-Make sure you have ansible installed in your ubuntu system. 
-Then run the first playbook which will install the base, 
-also creating the ares user for you. Run at root on the box.
-Playbook uses local connection.
+Make sure you have installed on your host pc:
 
-<pre>
-# ansible-playbook ubuntu_server-aresmush.yml
-</pre>
+* [Oracle Virtual Box](https://www.virtualbox.org)
+* [HasiCorp Vagrant](https://www.vagrantup.com)
+* 
 
-Now run the aresmush ansible installer, as root user.
+Clone this repo to your host and run the following command.
 
 <pre>
-# ansible-playbook install-aresmush.yml
+$ vagrant up
 </pre>
 
-# Configure
-Below will configure ares, this usually is done once. Make sure to be the
-'ares' user when running these commands.
-<pre>
-
-## Become the ares user
-# sudo su - ares
-
-# Change into game directory
-$ cd aresmush
-
-# This will configure site specific things (ip, ports, etc)
-$ bundle exec rake configure
-
-# This will wipe the db/init
-$ bundle exec rake init
-
-# Database migrations (If any)
-$ bundle exec rake initmigrations
-
-# Webportal config, file is created during site specific configuration
-
-$ sudo cp /home/ares/aresmush/install/nginx.default /etc/nginx/sites-enabled/default
-$ sudo service nginx restart
-</pre>
-
-# Start up the game!
-As the ares user star up the game.
-
-<pre>
-$ cd aresmush
-$ bin/startares
-</pre>
-
+Then follow the directions under configuing ares.
 
 # Vagrant
-When using the Vagrant template to start up a virtual box for testing, put the ansible scripts in a src directory under
-where Vagrant file on your host system. This will map /opt/src
-in the VM to the local files on your host.
+Vagrant will create the virtual box machine and auto-configure the installation of ares. It
+will take some time when the playbooks run and complete.
+
+# Configuring ares
+Once vagrant is finished, ssh into the virtal machine and run the setup command as the ares
+user
 
 <pre>
-Vagrantfile
-\src
-   - anible.cfg
-   - \roles\*
-   - install-aresmush.yml
-   - ubuntu_server-aresmush.yml
+vagrant ssh
+
+# Then when inside the virutal machine
+vagrant@aresmush:~$ sudo su - ares
+
+# As the ares user
+ares@aresmush:~$ cd /vagrant/
+ares@aresmush:~$ ./setup
 </pre>
 
-# TODO:
-* Like to dockerize the install of ares at some point.
-* Configure all with ansible, but did not want to mess with the ruby/rake things.
+Answer the questions for the configuration scripts. Use 192.168.100.199 for your hostname.
+
+# Start up the game server
+Once configured start up the game by
+<pre>
+ares@aresmush:~$ cd /home/ares/aresmush
+ares@aresmush:~$ bin/startares
+</pre>
+
+You should now be able to access your test server/web from your host machine using 
+http://localhost:8080 to get to the web portal and game by telnet 127.0.0.1 4201
