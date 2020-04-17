@@ -37,7 +37,7 @@ vagrant@aresmush:~$ sudo su - ares
 # As the ares user run setup script
 
 ares@aresmush:~$ cd /vagrant/
-ares@aresmush:~$ ./setup
+ares@aresmush:~$ ./setup.sh
 </pre>
 
 Answer the questions for the configuration scripts. Use 192.168.100.199 for your hostname. 
