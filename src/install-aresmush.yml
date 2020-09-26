@@ -14,7 +14,7 @@
         rvm1_install_flags: '--auto-dotfiles --user-install',
         rvm1_install_path: '/home/ares/.rvm'
       }
-    - Oefenweb.yarn
+    - oefenweb.yarn
 
   tasks:
     - name: Adding ruby version to profile
